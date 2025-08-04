@@ -2,6 +2,8 @@ import { Controller, useForm } from 'react-hook-form';
 import Button from '../../../components/Button';
 import FormInput from '../../../components/FormInput';
 import { GoogleIcon, KakaoIcon, NaverIcon } from '../../../assets';
+import { useAuthStore } from "../../../stores/authStore";
+import { useNavigate } from "react-router-dom";
 
 type LoginFormData = {
     email: string;
@@ -14,9 +16,19 @@ const LoginForm = () => {
         mode: 'onChange', // 실시간 validation
     });
 
+    const login = useAuthStore((state) => state.login);
+    const navigate = useNavigate();
+
     // 임시 onSubmit
     const onSubmit = (data: LoginFormData) => {
-        console.log(data);
+        const dummyUser = {
+            id: "1",
+            email: data.email,
+        };
+        const dummyToken = "mock-token-123";
+
+        login(dummyUser, dummyToken); // 상태 반영
+        navigate("/dashboard");
     };
 
     return (
