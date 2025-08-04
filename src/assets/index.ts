@@ -30,3 +30,6 @@ export { default as MyPageIcon } from './my-page.svg?react';
 export { default as LogoutIcon } from './logout.svg?react';
 export { default as ArrowSquareIcon } from './arrow-square.svg?react';
 export { default as AddIcon } from './add.svg?react';
+export { default as ViewToggleOffIcon } from './view-toggle-off.svg?react';
+export { default as ViewToggleOnIcon } from './view-toggle-on.svg?react';
+export { default as DividerIcon } from './divider.svg?react';
