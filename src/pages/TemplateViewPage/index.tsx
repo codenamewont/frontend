@@ -1,9 +1,7 @@
 import { useParams } from 'react-router-dom';
 import RepeatDayOption from "./components/AlertSettingModal/RepeatDayOption";
 import TimeSelectModal from './components/AlertSettingModal/TimeSelectModal';
-import SpecificDateSelector from './components/AlertSettingModal/SpecificDateSelector';
-import ChannelSelectModal from './components/AlertSettingModal/ChannelSelectModal';
-import AlertMemoInput from './components/AlertSettingModal/AlertMemoInput';
+import IntegrationGuideModal from './components/AlertSettingModal/IntegrationGuideModal';
 
 const TemplateViewPage = () => {
     const { id } = useParams();
@@ -15,9 +13,7 @@ const TemplateViewPage = () => {
                 <RepeatDayOption />
                 <TimeSelectModal />
                 <div className='w-[464px] px-6'>
-                    <SpecificDateSelector />
-                    <ChannelSelectModal />
-                    <AlertMemoInput />
+                    <IntegrationGuideModal channel='슬랙' onConfirm={() => console.log("확인")} onCancel={() => console.log("취소")} />
                 </div>
             </div>
         </>

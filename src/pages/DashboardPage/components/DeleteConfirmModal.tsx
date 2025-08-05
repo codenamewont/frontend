@@ -28,7 +28,7 @@ const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({ isOpen, onClose
                         <div className="w-11 h-11"></div>
                         <h2 className="text-[#141414] text-center font-pretendard text-[18px] font-semibold leading-normal">삭제 확인</h2>
                         <div className="flex h-[44px] p-[10px_0_10px_20px] justify-end items-center">
-                            <button onClick={onClose} className="w-6 h-6"><CloseIcon className="w-6 h-6" /></button>
+                            <button onClick={onClose} className="cursor-pointer w-6 h-6"><CloseIcon className="w-6 h-6" /></button>
                         </div>
                     </div>
                     <p className="text-[#4D4D4D] text-center font-pretendard text-[16px] font-medium leading-[140%]">정말 템플릿을 삭제하시겠어요?</p>
