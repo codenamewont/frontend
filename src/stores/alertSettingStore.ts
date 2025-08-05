@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 type Meridiem = '오전' | '오후';
-type Channel = '카카오톡' | '슬랙';
+type Channel = '슬랙' | '구글 캘린더';
 
 type Time = {
     hour: number;
@@ -72,7 +72,7 @@ export const useAlertSettingStore = create<AlertSettingState>((set, get) => ({
     memo: '',
     setMemo: (memo) => set({ memo }),
 
-    selectedChannels: ['카카오톡'],
+    selectedChannels: ['구글 캘린더'],
     setSelectedChannels: (updater) => {
         set((state) => ({
             selectedChannels: updater(state.selectedChannels),

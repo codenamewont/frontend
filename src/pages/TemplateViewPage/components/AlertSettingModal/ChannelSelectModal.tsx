@@ -3,19 +3,19 @@ import { useAlertSettingStore } from "../../../../stores/alertSettingStore";
 import Button from "../../../../components/Button";
 import { ViewToggleOffIcon, ViewToggleOnIcon } from "../../../../assets";
 
-type Channel = "카카오톡" | "슬랙";
+type Channel = "슬랙" | "구글 캘린더";
 
 const channelInfos: {
     name: Channel;
     description: string;
 }[] = [
     {
-        name: "카카오톡",
-        description: "카카오 채널톡으로 템플릿 링크 알림을 받습니다",
-    },
-    {
         name: "슬랙",
         description: "슬랙으로 템플릿 링크 알림을 받습니다",
+    },
+    {
+        name: "구글 캘린더",
+        description: "구글 캘린더로 템플릿 링크 알림을 받습니다",
     },
 ];
 
@@ -43,7 +43,7 @@ const ChannelSelectModal = () => {
 
     return (
         <div className="flex w-[464px] px-[24px] pt-[16px] pb-[24px] flex-col justify-center items-center gap-[16px] rounded-[12px] bg-white shadow-[0_0_16px_0_rgba(0,0,0,0.02)]">
-            <div className="flex h-[44px] justify-between items-center self-stretch">
+            <div className="flex h-[44px] justify-center items-center self-stretch">
                 <h3 className="text-[#141414] text-center font-pretendard text-[20px] font-semibold leading-none">알림채널 선택</h3>
             </div>
             <div className="flex flex-col items-start gap-8 self-stretch">
