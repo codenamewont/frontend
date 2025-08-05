@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import RepeatDayOption from "./components/AlertSettingModal/RepeatDayOption";
 import TimeSelectModal from './components/AlertSettingModal/TimeSelectModal';
 import SpecificDateSelector from './components/AlertSettingModal/SpecificDateSelector';
+import ChannelSelectModal from './components/AlertSettingModal/ChannelSelectModal';
 
 const TemplateViewPage = () => {
     const { id } = useParams();
@@ -14,6 +15,7 @@ const TemplateViewPage = () => {
                 <TimeSelectModal />
                 <div className='w-[464px] px-6'>
                     <SpecificDateSelector />
+                    <ChannelSelectModal />
                 </div>
             </div>
         </>

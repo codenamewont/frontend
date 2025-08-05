@@ -27,8 +27,8 @@ interface AlertSettingState {
     setMemo: (memo: string) => void;
 
     // 알림 채널
-    selectedChannel: Channel;
-    setSelectedChannel: (channel: Channel) => void;
+    selectedChannels: Channel[];
+    setSelectedChannels: (updater: (prev: Channel[]) => Channel[]) => void;
 
     // 시간 선택 모달 열림 여부
     showTimeSelect: boolean;
@@ -44,7 +44,7 @@ interface AlertSettingState {
         repeatDays?: string[];
         specificDate?: string;
         memo: string;
-        channel: Channel;
+        channels: Channel[];
     };
 }
 
@@ -72,8 +72,12 @@ export const useAlertSettingStore = create<AlertSettingState>((set, get) => ({
     memo: '',
     setMemo: (memo) => set({ memo }),
 
-    selectedChannel: '카카오톡',
-    setSelectedChannel: (channel) => set({ selectedChannel: channel }),
+    selectedChannels: ['카카오톡'],
+    setSelectedChannels: (updater) => {
+        set((state) => ({
+            selectedChannels: updater(state.selectedChannels),
+        }));
+    },
 
     showTimeSelect: false,
     setShowTimeSelect: (show) => set({ showTimeSelect: show }),
@@ -82,7 +86,7 @@ export const useAlertSettingStore = create<AlertSettingState>((set, get) => ({
     setShowChannelSelect: (show) => set({ showChannelSelect: show }),
 
     getPayload: () => {
-        const { selectedTime, repeatDays, specificDate, memo, selectedChannel } = get();
+        const { selectedTime, repeatDays, specificDate, memo, selectedChannels } = get();
         const timeStr = `${selectedTime.meridiem} ${selectedTime.hour}:${selectedTime.minute
             .toString()
             .padStart(2, '0')}`;
@@ -91,7 +95,7 @@ export const useAlertSettingStore = create<AlertSettingState>((set, get) => ({
             time: timeStr,
             ...(specificDate ? { specificDate } : { repeatDays }),
             memo,
-            channel: selectedChannel,
+            channels: selectedChannels,
         };
     },
 }));
