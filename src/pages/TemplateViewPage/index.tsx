@@ -3,6 +3,7 @@ import RepeatDayOption from "./components/AlertSettingModal/RepeatDayOption";
 import TimeSelectModal from './components/AlertSettingModal/TimeSelectModal';
 import SpecificDateSelector from './components/AlertSettingModal/SpecificDateSelector';
 import ChannelSelectModal from './components/AlertSettingModal/ChannelSelectModal';
+import AlertMemoInput from './components/AlertSettingModal/AlertMemoInput';
 
 const TemplateViewPage = () => {
     const { id } = useParams();
@@ -16,6 +17,7 @@ const TemplateViewPage = () => {
                 <div className='w-[464px] px-6'>
                     <SpecificDateSelector />
                     <ChannelSelectModal />
+                    <AlertMemoInput />
                 </div>
             </div>
         </>
