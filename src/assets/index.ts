@@ -33,3 +33,5 @@ export { default as AddIcon } from './add.svg?react';
 export { default as ViewToggleOffIcon } from './view-toggle-off.svg?react';
 export { default as ViewToggleOnIcon } from './view-toggle-on.svg?react';
 export { default as DividerIcon } from './divider.svg?react';
+export { default as ArrowLeftIcon } from './arrow-left.svg?react';
+export { default as ArrowRightIcon } from './arrow-right.svg?react';
