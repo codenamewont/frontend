@@ -45,3 +45,4 @@ export { default as ViewInstaIcon } from './view-insta.svg?react';
 export { default as ViewKakaoIcon } from './view-kakao.svg?react';
 export { default as ViewLinkIcon } from './view-link.svg?react';
 export { default as ViewShareIcon } from './view-share.svg?react';
+export { default as ViewBackIcon } from './view-back.svg?react';

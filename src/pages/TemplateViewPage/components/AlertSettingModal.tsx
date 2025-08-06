@@ -7,7 +7,7 @@ import AlertMemoInput from "./AlertSettingModal/AlertMemoInput";
 import { CloseIcon, ModalOpenIcon } from "../../../assets";
 import Button from "../../../components/Button";
 
-const AlertSettingModal = ({ onClose }: { onClose: () => void }) => {
+const AlertSettingModal = ({ onClose, onSave }: { onClose: () => void; onSave: () => void }) => {
     const {
         selectedTime,
         selectedChannels,
@@ -33,11 +33,13 @@ const AlertSettingModal = ({ onClose }: { onClose: () => void }) => {
         const payload = getPayload();
         console.log("저장 payload:", payload);
         // TODO: axios post 예정
+        onSave();
+        onClose(); // 모달 닫기
     };
 
     return (
         <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/50" onClick={onClose}>
-            <div className="flex w-[464px] px-[24px] pt-[16px] pb-[24px] flex-col justify-center items-center gap-4 rounded-[12px] bg-white shadow-[0_0_16px_0_rgba(0,0,0,0.02)]">
+            <div onClick={(e) => e.stopPropagation()} className="flex w-[464px] px-[24px] pt-[16px] pb-[24px] flex-col justify-center items-center gap-4 rounded-[12px] bg-white shadow-[0_0_16px_0_rgba(0,0,0,0.02)]">
                 <div className="flex h-[44px] justify-between items-center self-stretch">
                     <div className="w-11 h-11"></div>
                     <h2 className="text-[#141414] text-center font-pretendard text-[20px] font-semibold leading-normal">알림설정</h2>

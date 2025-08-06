@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import ShareButton from './components/ViewHeader/ShareButton';
+import ViewHeader from './components/ViewHeader';
 
 const TemplateViewPage = () => {
     const { id } = useParams();
@@ -8,7 +8,7 @@ const TemplateViewPage = () => {
         <>
             <p>템플릿 ID: {id}</p>
             <div className='w-full px-6 bg-[#fafafa]'>
-                <ShareButton />
+                <ViewHeader />
             </div>
         </>
     );
