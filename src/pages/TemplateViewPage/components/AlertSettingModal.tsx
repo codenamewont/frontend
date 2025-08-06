@@ -9,7 +9,6 @@ import Button from "../../../components/Button";
 
 const AlertSettingModal = ({ onClose }: { onClose: () => void }) => {
     const {
-        /*specificDate,*/
         selectedTime,
         selectedChannels,
         setShowTimeSelect,
@@ -73,7 +72,7 @@ const AlertSettingModal = ({ onClose }: { onClose: () => void }) => {
                     <div className="flex flex-col items-start gap-8 self-stretch">
                         <div className="flex items-center gap-4 self-stretch">
                             <Button onClick={onClose} variant="line" className="flex-1 basis-0 h-[50px]">삭제</Button>
-                            <Button onClick={handleSave} className="flex-1 basis-0 h-[50px]">저장</Button>
+                            <Button disabled={!isTimeSet} onClick={handleSave} className="flex-1 basis-0 h-[50px]">저장</Button>
                         </div>
                     </div>
                 </div>
