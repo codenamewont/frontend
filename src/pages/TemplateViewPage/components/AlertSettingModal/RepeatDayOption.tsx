@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useAlertSettingStore } from "../../../../stores/alertSettingStore";
 import { ViewToggleOffIcon, ViewToggleOnIcon, DividerIcon } from "../../../../assets";
 
@@ -8,10 +7,11 @@ const baseButtonClass = "flex w-[38px] h-[38px] flex-col justify-center items-ce
 const getButtonClass = (selected: boolean) => `${baseButtonClass} ${selected ? "bg-[#5736FF] text-white" : "bg-[#F0F0F0] text-[#141414]"}`;
 
 const RepeatDayOption = () => {
-    const [enabled, setEnabled] = useState(false);
-
     const repeatDays = useAlertSettingStore((state) => state.repeatDays);
     const toggleRepeatDay = useAlertSettingStore((state) => state.toggleRepeatDay);
+
+    const repeatEnabled = useAlertSettingStore((state) => state.repeatEnabled);
+    const setRepeatEnabled = useAlertSettingStore((state) => state.setRepeatEnabled);
 
     const selectAll = () => {
         if (repeatDays.length === 7) {
@@ -27,11 +27,11 @@ const RepeatDayOption = () => {
         <div className="flex flex-col items-start gap-4 self-stretch">
             <div className="flex h-[32px] justify-between items-center self-stretch">
                 <span className="text-[#141414] font-pretendard text-[18px] font-semibold leading-normal">반복요일</span>
-                <button onClick={() => setEnabled((prev) => !prev)}>
-                    {enabled ? <ViewToggleOnIcon className="w-14 h-8" /> : <ViewToggleOffIcon className="w-14 h-8" />}
+                <button onClick={() => setRepeatEnabled(!repeatEnabled)}>
+                    {repeatEnabled ? <ViewToggleOnIcon className="w-14 h-8" /> : <ViewToggleOffIcon className="w-14 h-8" />}
                 </button>
             </div>
-            {enabled && (
+            {repeatEnabled && (
                 <div className="flex flex-col items-start gap-4 self-stretch">
                     <div className="flex pb-6 justify-center items-center gap-3 self-stretch">
                         <button onClick={selectAll} className={`${getButtonClass(repeatDays.length === 7)} !w-[56px]`}>매일</button>
