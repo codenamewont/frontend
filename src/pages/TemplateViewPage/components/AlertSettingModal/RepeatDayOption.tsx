@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAlertSettingStore } from "../../../../stores/alertSettingStore";
 import { ViewToggleOffIcon, ViewToggleOnIcon, DividerIcon } from "../../../../assets";
 
 const days = ["월", "화", "수", "목", "금", "토", "일"];
@@ -8,19 +9,17 @@ const getButtonClass = (selected: boolean) => `${baseButtonClass} ${selected ? "
 
 const RepeatDayOption = () => {
     const [enabled, setEnabled] = useState(false);
-    const [selectedDays, setSelectedDays] = useState<string[]>([]);
 
-    const toggleDay = (day: string) => {
-        setSelectedDays((prev) =>
-            prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
-        );
-    };
+    const repeatDays = useAlertSettingStore((state) => state.repeatDays);
+    const toggleRepeatDay = useAlertSettingStore((state) => state.toggleRepeatDay);
 
     const selectAll = () => {
-        if (selectedDays.length === 7) {
-            setSelectedDays([]); // 전체 해제
+        if (repeatDays.length === 7) {
+            days.forEach((day) => toggleRepeatDay(day)); // 전체 해제
         } else {
-            setSelectedDays([...days]); // 전체 선택
+            days.forEach((day) => {
+                if (!repeatDays.includes(day)) toggleRepeatDay(day); // 전체 선택
+            });
         }
     };
 
@@ -35,10 +34,10 @@ const RepeatDayOption = () => {
             {enabled && (
                 <div className="flex flex-col items-start gap-4 self-stretch">
                     <div className="flex pb-6 justify-center items-center gap-3 self-stretch">
-                        <button onClick={selectAll} className={`${getButtonClass(selectedDays.length === 7)} !w-[56px]`}>매일</button>
+                        <button onClick={selectAll} className={`${getButtonClass(repeatDays.length === 7)} !w-[56px]`}>매일</button>
                         <DividerIcon />
                         {days.map((day) => (
-                            <button key={day} onClick={() => toggleDay(day)} className={getButtonClass(selectedDays.includes(day))}>{day}</button>
+                            <button key={day} onClick={() => toggleRepeatDay(day)} className={getButtonClass(repeatDays.includes(day))}>{day}</button>
                         ))}
                     </div>
                 </div>

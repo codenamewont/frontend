@@ -18,6 +18,10 @@ interface AlertSettingState {
     repeatDays: string[];
     toggleRepeatDay: (day: string) => void;
 
+    // 반복 토글 상태
+    repeatEnabled: boolean;
+    setRepeatEnabled: (enabled: boolean) => void;
+
     // 특정 날짜 선택
     specificDate: string | null; // 'YYYY-MM-DD'
     setSpecificDate: (date: string | null) => void;
@@ -50,7 +54,7 @@ interface AlertSettingState {
 
 export const useAlertSettingStore = create<AlertSettingState>((set, get) => ({
     selectedTime: {
-        hour: 1,
+        hour: 0,
         minute: 0,
         meridiem: '오전',
     },
@@ -66,13 +70,16 @@ export const useAlertSettingStore = create<AlertSettingState>((set, get) => ({
         });
     },
 
+    repeatEnabled: false,
+    setRepeatEnabled: (enabled) => set({ repeatEnabled: enabled }),
+
     specificDate: null,
     setSpecificDate: (date) => set({ specificDate: date }),
 
     memo: '',
     setMemo: (memo) => set({ memo }),
 
-    selectedChannels: ['구글 캘린더'],
+    selectedChannels: [],
     setSelectedChannels: (updater) => {
         set((state) => ({
             selectedChannels: updater(state.selectedChannels),
@@ -86,16 +93,27 @@ export const useAlertSettingStore = create<AlertSettingState>((set, get) => ({
     setShowChannelSelect: (show) => set({ showChannelSelect: show }),
 
     getPayload: () => {
-        const { selectedTime, repeatDays, specificDate, memo, selectedChannels } = get();
-        const timeStr = `${selectedTime.meridiem} ${selectedTime.hour}:${selectedTime.minute
-            .toString()
-            .padStart(2, '0')}`;
+        const { selectedTime, repeatDays, specificDate, memo, selectedChannels, repeatEnabled } = get();
+        const timeStr = `${selectedTime.meridiem} ${selectedTime.hour}:${selectedTime.minute.toString().padStart(2, '0')}`;
 
-        return {
+        const payload: {
+            time: string;
+            memo: string;
+            channels: Channel[];
+            repeatDays?: string[];
+            specificDate?: string;
+        } = {
             time: timeStr,
-            ...(specificDate ? { specificDate } : { repeatDays }),
             memo,
             channels: selectedChannels,
         };
+
+        if (repeatEnabled && repeatDays.length > 0) {
+            payload.repeatDays = repeatDays;
+        } else {
+            payload.specificDate = specificDate || '';
+        }
+
+        return payload;
     },
 }));

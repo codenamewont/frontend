@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import { useAlertSettingStore } from "../../../../stores/alertSettingStore";
 import { ArrowLeftIcon, ArrowRightIcon } from "../../../../assets";
@@ -7,6 +7,13 @@ const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
 
 const SpecificDateSelector = () => {
     const { specificDate, setSpecificDate } = useAlertSettingStore();
+
+    useEffect(() => {
+        if (!specificDate) {
+            const today = dayjs().format("YYYY-MM-DD");
+            setSpecificDate(today);
+        }
+    }, [specificDate, setSpecificDate]);
 
     const today = dayjs();
     const [currentMonth, setCurrentMonth] = useState(today.startOf("month"));
