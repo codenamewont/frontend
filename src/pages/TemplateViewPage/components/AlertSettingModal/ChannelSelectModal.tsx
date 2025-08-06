@@ -11,11 +11,11 @@ const channelInfos: {
 }[] = [
     {
         name: "슬랙",
-        description: "슬랙으로 템플릿 링크 알림을 받습니다",
+        description: "슬랙으로 템플릿 알림을 받습니다",
     },
     {
         name: "구글 캘린더",
-        description: "구글 캘린더로 템플릿 링크 알림을 받습니다",
+        description: "구글 캘린더로 템플릿 알림을 받습니다",
     },
 ];
 
