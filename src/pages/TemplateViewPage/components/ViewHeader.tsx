@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTemplateStore } from "../../../stores/templateStore";
 import AlertSettingModal from "./AlertSettingModal";
 import { ViewBackIcon, ViewDeleteIcon, ViewExportIcon, ViewAlertOffIcon, ViewAlertOnIcon } from "../../../assets";
 import Button from "../../../components/Button";
@@ -9,6 +10,7 @@ import Button from "../../../components/Button";
 const ViewHeader = () => {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>(); // URL에서 id 가져오기
+    const { templateData } = useTemplateStore();
 
     const handleEditClick = () => {
         if (!id) return; // id가 없으면 동작 안 함
@@ -17,6 +19,14 @@ const ViewHeader = () => {
 
     const [isAlertActive, setIsAlertActive] = useState(false); // 추후 백엔드에서 알림 설정 여부 정보 받아오기
     const [showAlertModal, setShowAlertModal] = useState(false);
+
+    useEffect(() => {
+        if (!templateData) return;
+
+        const { alarmDt, repeatType, alarmRepeatDay, alarmTime } = templateData;
+        const hasAlert = !!(alarmDt || repeatType || alarmRepeatDay || alarmTime);
+        setIsAlertActive(hasAlert);
+    }, [templateData]);
 
     const handleAlertClick = () => {
         if (!isAlertActive) {
@@ -45,7 +55,7 @@ const ViewHeader = () => {
                     <button onClick={() => window.history.back()} className="cursor-pointer w-11 h-11">
                         <ViewBackIcon className="w-11 h-11" />
                     </button>
-                    <h2 className="flex w-[240px] h-[44px] px-[16px] items-center gap-2 text-black/90 font-inter text-[20px] font-semibold leading-none">템플릿 제목</h2>
+                    <h2 className="flex w-[240px] h-[44px] px-[16px] items-center gap-2 text-black/90 font-inter text-[20px] font-semibold leading-none">{templateData ? templateData.templateNm : "빈 템플릿"}</h2>
                 </div>
                 <div className="flex items-center gap-4">
                     <Button variant="line" className="!p-0 w-[120px] h-[44px]">
