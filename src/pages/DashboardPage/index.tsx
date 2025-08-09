@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import Header from "../../components/Header";
 import Button from "../../components/Button";
 import { AddIcon } from "../../assets";
@@ -20,6 +20,7 @@ interface ApiTemplate {
 }
 
 // API 응답 카운트 타입 정의
+/*
 interface TemplateCntList {
     totalCnt: number;
     totalDailyCnt: number;
@@ -27,6 +28,7 @@ interface TemplateCntList {
     totalOfficeCnt: number;
     totalTripCnt: number;
 }
+*/
 
 // 더미 데이터
 const DUMMY_TEMPLATES: TemplateListItem[] = [
@@ -81,39 +83,6 @@ const DUMMY_TEMPLATES: TemplateListItem[] = [
     isBookmarked: true,
     thumbnail: "https://core-cdn-fe.toss.im/image/optimize/?src=https://blog-cdn.tosspayments.com/wp-content/uploads/2021/08/28011146/semo9.png?&w=3840&q=75"
     },
-    {
-    templateNo: 7,
-    templateNm: "청소하기",
-    categoryNm: "생활",
-    regDt: "2025-07-25T17:00:00Z",
-    updDt: "2025-07-25T17:00:00Z",
-    thumbnail: "https://core-cdn-fe.toss.im/image/optimize/?src=https://blog-cdn.tosspayments.com/wp-content/uploads/2021/08/28011146/semo9.png?&w=3840&q=75"
-    },
-    {
-    templateNo: 8,
-    templateNm: "장보기 리스트",
-    categoryNm: "생활",
-    regDt: "2025-07-24T16:30:00Z",
-    updDt: "2025-07-24T16:30:00Z",
-    thumbnail: "https://core-cdn-fe.toss.im/image/optimize/?src=https://blog-cdn.tosspayments.com/wp-content/uploads/2021/08/28011146/semo9.png?&w=3840&q=75"
-    },
-    {
-    templateNo: 9,
-    templateNm: "운동 루틴",
-    categoryNm: "생활",
-    regDt: "2025-07-23T19:10:00Z",
-    updDt: "2025-07-23T19:10:00Z",
-    isBookmarked: true,
-    thumbnail: "https://core-cdn-fe.toss.im/image/optimize/?src=https://blog-cdn.tosspayments.com/wp-content/uploads/2021/08/28011146/semo9.png?&w=3840&q=75"
-    },
-    {
-    templateNo: 10,
-    templateNm: "회사 행사 준비",
-    categoryNm: "업무",
-    regDt: "2025-07-22T11:00:00Z",
-    updDt: "2025-07-22T12:00:00Z",
-    thumbnail: "https://core-cdn-fe.toss.im/image/optimize/?src=https://blog-cdn.tosspayments.com/wp-content/uploads/2021/08/28011146/semo9.png?&w=3840&q=75"
-    },
 ];
 
 const DashboardPage = () => {
@@ -149,115 +118,98 @@ const DashboardPage = () => {
         setVisibleCount(8);
     };
 
-    // 카테고리를 API 값으로 변환하는 함수
-    const getCategoryValue = (category: string) => {
-        switch (category) {
-            case "전체":
-                return "";
-            case "즐겨찾기":
-                return "0";
-            case "업무":
-                return "1";
-            case "생활":
-                return "2";
-            case "여행":
-                return "3";
-            default:
-                return undefined;
-        }
-    };
-
-    // 정렬 기준을 API 값으로 변환하는 함수
-    const getAlignValue = (align: string) => {
-        switch (align) {
-            case "최근 수정일":
-                return 0;
-            case "최근 생성일":
-                return 1;
-            case "알림 시간 임박":
-                return 2;
-            case "템플릿명":
-                return 3;
-            default:
-                return 0;
-        }
-    };
-
     // 템플릿 불러오기 함수
-    const fetchTemplates = useCallback(
-        async () => {
-            setIsLoading(true);
-            const token = localStorage.getItem('token');
+    const fetchTemplates = useCallback(async () => {
+        setIsLoading(true);
+        const token = localStorage.getItem("token");
 
-            try {
-                const categoryValue = getCategoryValue(selectedCategory);
-                const requestBody: {
-                    page: number;
-                    sort: number;
-                    cateNo?: string;
-                } = {
-                    page: 1,
-                    sort: getAlignValue(selectedAlign)
-                };
-                // 카테고리가 전체가 아닐 때만 cateNo 추가
-                if (categoryValue) {
-                    requestBody.cateNo = categoryValue;
-                }
+        try {
+            // 카테고리 필터링, 정렬은 클라이언트에서 처리
+            const response = await fetch("https://packupapi.xyz/temp/getUserTemplateDataList", {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ page: 1, sort: 0 }),
+            });
 
-                const response = await fetch("https://packupapi.xyz/temp/getUserTemplateDataList", {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(requestBody)
-                });
-
-                if (!response.ok) {
-                    throw new Error('템플릿 불러오기 실패');
-                }
-
-                const responseData = await response.json();
-                const templates = responseData.templateDataList || [];
-                const templateCntList: TemplateCntList = responseData.templateCntList;
-
-                if (templateCntList) {
-                    setCategoryCounts({
-                        전체: templateCntList.totalCnt,
-                        즐겨찾기: templateCntList.totalFavoriteCnt,
-                        업무: templateCntList.totalOfficeCnt,
-                        생활: templateCntList.totalDailyCnt,
-                        여행: templateCntList.totalTripCnt,
-                    });
-                }
-                const convertedTemplates = templates.map((template: ApiTemplate) => ({
-                    templateNo: template.templateNo,
-                    templateNm: template.templateNm,
-                    categoryNm: template.cateNm,
-                    regDt: template.regDt,
-                    updDt: template.updDt || template.regDt,
-                    isBookmarked: template.isFavorite === "Y",
-                    thumbnail: "https://core-cdn-fe.toss.im/image/optimize/?src=https://blog-cdn.tosspayments.com/wp-content/uploads/2021/08/28011146/semo9.png?&w=3840&q=75"
-                }));
-
-                setAllTemplates(convertedTemplates);
-            } catch (err) {
-                console.error("템플릿 불러오기 실패: ", err);
-                alert('템플릿을 불러오는 중 오류가 발생했습니다. 임시 데이터를 표시합니다.');
-                setAllTemplates(DUMMY_TEMPLATES);
-            } finally {
-                setIsLoading(false);
+            if (!response.ok) {
+                throw new Error("템플릿 불러오기 실패");
             }
-        },
-        [selectedCategory, selectedAlign]
-    );
+
+            const responseData = await response.json();
+            const templates: ApiTemplate[] = responseData.templateDataList || [];
+
+            const converted: TemplateListItem[] = templates.map((t) => ({
+                templateNo: t.templateNo,
+                templateNm: t.templateNm,
+                categoryNm: t.cateNm,
+                regDt: t.regDt,
+                updDt: t.updDt || t.regDt,
+                isBookmarked: t.isFavorite === "Y",
+                thumbnail: "https://core-cdn-fe.toss.im/image/optimize/?src=https://blog-cdn.tosspayments.com/wp-content/uploads/2021/08/28011146/semo9.png?&w=3840&q=75",
+            }));
+
+            setAllTemplates(converted);
+        } catch (err) {
+            console.error("템플릿 불러오기 실패: ", err);
+            alert("템플릿을 불러오는 중 오류가 발생했습니다. 임시 데이터를 표시합니다.");
+            setAllTemplates(DUMMY_TEMPLATES);
+        } finally {
+            setIsLoading(false);
+        }
+    }, []);
 
     useEffect(() => {
         fetchTemplates();
     }, [fetchTemplates]);
 
-    // 현재 보여줄 템플릿 목록
-    const visibleTemplates = allTemplates.slice(0, visibleCount);
+    // 카테고리 카운트 로컬 계산
+    useEffect(() => {
+        const total = allTemplates.length;
+        const 즐겨찾기 = allTemplates.filter((t) => t.isBookmarked).length;
+        const 업무 = allTemplates.filter((t) => t.categoryNm === "업무").length;
+        const 생활 = allTemplates.filter((t) => t.categoryNm === "생활").length;
+        const 여행 = allTemplates.filter((t) => t.categoryNm === "여행").length;
+        setCategoryCounts({ 전체: total, 즐겨찾기, 업무, 생활, 여행 });
+    }, [allTemplates]);
+
+    // 필터 + 정렬 (클라이언트)
+    const filteredSorted = useMemo(() => {
+        // 필터
+        let list = allTemplates.filter((t) => {
+            if (selectedCategory === "전체") return true;
+            if (selectedCategory === "즐겨찾기") return !!t.isBookmarked;
+            return t.categoryNm === selectedCategory;
+        });
+
+        // 정렬
+        const byDateDesc = (a?: string, b?: string) =>
+            new Date(b || 0).getTime() - new Date(a || 0).getTime();
+
+        switch (selectedAlign) {
+            case "최근 수정일":
+                list = [...list].sort((a, b) => byDateDesc(a.updDt, b.updDt));
+                break;
+            case "최근 생성일":
+                list = [...list].sort((a, b) => byDateDesc(a.regDt, b.regDt));
+                break;
+            case "템플릿명":
+                list = [...list].sort((a, b) => a.templateNm.localeCompare(b.templateNm));
+                break;
+            case "알림 시간 임박":
+                // 서버 필드가 없다면 일단 수정일 기준으로 대체
+                list = [...list].sort((a, b) => byDateDesc(a.updDt, b.updDt));
+                break;
+            default:
+                break;
+        }
+        return list;
+    }, [allTemplates, selectedCategory, selectedAlign]);
+
+    // 현재 보여줄 템플릿 목록 (페이지네이션)
+    const visibleTemplates = filteredSorted.slice(0, visibleCount);
 
     return (
         <div className='flex w-full flex-col items-start gap-[8px] bg-[#FAFAFA] min-h-screen'>
@@ -289,7 +241,7 @@ const DashboardPage = () => {
                     ) : (
                         <>
                             <TemplateGrid templates={visibleTemplates} />
-                            {visibleCount < allTemplates.length && (
+                            {visibleCount < filteredSorted.length && (
                                 <Button onClick={() => setVisibleCount(prev => prev + 8)} className="w-[343px] h-[50px]" variant="line">더보기</Button>
                             )}
                         </>
