@@ -9,7 +9,10 @@ export type TemplateListItem = {
     updDt: string;              // 수정일(정렬 기준)
     thumbnail?: string;         // 썸네일 URL
     isBookmarked?: boolean;     // 북마크 여부
-    alarmDt?: string;           // 알림 시간(정렬 기준)
+    alarmDt?: string;           // 단발성 알림 일시
+    repeatType?: boolean;       // true=반복, false=단발성
+    alarmRepeatDay?: string;    // 반복 요일 (예: "월,화,수" 또는 "MON,TUE")
+    alarmTime?: string;         // 반복 알림 시각 (예: "09:30" 또는 "0930")
     placeholder?: boolean;
 };
 
